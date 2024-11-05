@@ -2,16 +2,6 @@
 An Integrated Approach for Somatic Copy Number Variation and Breakpoint Detection using Next-generation Sequencing Data
 v1.0
 
-Yaoyao Li
-Hangzhou Institute of Technology, Xidian University, 
-Hangzhou, China
-
-liyaoyao@xidian.edu.cn
-
-###############################################################################
-
-
-
 ******************************************************************************
 INTRODUCTION
 ******************************************************************************
@@ -40,8 +30,8 @@ Program descriptions:
 before run this algorithm, you should prepare the file of referance (*.fa), the bam file of tested sample(*.bam)
 
 # step1 use the improved COPOD algorithm to acquire the approximate CNV regions
-"""
-set the input parameters:  
+
+## set the input parameters:  
 	refpath: the path of reference data
  	outpath: the path of outfile by this algorithm
  	segpath: the path of segfile by segmentation algorithm 
@@ -58,7 +48,7 @@ eg: 	path = 'simu_chr21_0.2_4x'
         segpath = outpath +str("/seg_")+'sim' + num
         p_value_file = outpath + '/' + bam + ".score.txt"
         outfile = outpath + '/' + bam + ".result.txt"
-"""
+##
 
 """
 the columns of result file of approximate CNV region represent: 

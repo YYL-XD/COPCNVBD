@@ -25,6 +25,10 @@ rpy2 3.5.8
 cvxpy
 R 4.2.1 or newer
 
+Test data
+============
+uses can download the test data sim1_4_4100_read.sort.bam by the master branch.
+
 Program descriptions:
 ====================
 before run this algorithm, you should prepare the file of referance (*.fa), the bam file of tested sample(*.bam)

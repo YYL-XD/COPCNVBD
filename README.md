@@ -27,7 +27,7 @@ R 4.2.1 or newer
 
 Test data
 ============
-uses can download the test data sim1_4_4100_read.sort.bam by the master branch.
+users can download the test data sim1_4_4100_read.sort.bam by the master branch.
 
 Program descriptions:
 ====================

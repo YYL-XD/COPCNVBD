@@ -305,7 +305,6 @@ def main(params):
     segpath = params[4]
     binSize = int(params[5])
     col = int(params[6])
-    k = int(params[7])
     
     p_value_file = outpath + '/' + bam + ".score.txt"
     outfile = outpath + '/' + bam + ".result.txt"

@@ -11,7 +11,6 @@ if __name__ == "__main__":
     
     binSize = 1000
     col = 50
-    path = 'simu_chr21_0.2_4x'
     bam_path = '../CNV_data/simu_chr21_0.2_4x/'
     bam = 'sim1_4_4100_read.sort.bam'
     refpath ='../CNV_data'   

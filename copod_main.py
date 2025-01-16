@@ -11,21 +11,13 @@ if __name__ == "__main__":
     
     binSize = 1000
     col = 50
-    
-    for i in range(1,2):
-        num = str(i)
-        path = 'simu_chr21_0.2_4x'
-        bam_name = '_4_4100_'
-        bam_path = '../CNV_data/'+path + '/'
-        bam = 'sim' + num + bam_name+'read.sort.bam'
-        refpath ='../CNV_data'
-        
-        outpath = '../CNV_data/'+path+'/result/COPOD_step1'
-        segpath = outpath +str("/seg_")+'sim' + num
-        p_value_file = outpath + '/' + bam + ".score.txt"
-        outfile = outpath + '/' + bam + ".result.txt"
-        
-        params = (bam_path, bam, refpath, outpath, segpath, binSize, col)
-        copod_preprocess.main(params)
+    path = 'simu_chr21_0.2_4x'
+    bam_path = '../CNV_data/simu_chr21_0.2_4x/'
+    bam = 'sim1_4_4100_read.sort.bam'
+    refpath ='../CNV_data'   
+    outpath = '../CNV_data/simu_chr21_0.2_4x/result/COPOD_step1'
+    segpath = outpath +str("/seg_sim1")
+    params = (bam_path, bam, refpath, outpath, segpath, binSize, col)
+    copod_preprocess.main(params)
 
 

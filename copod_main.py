@@ -11,7 +11,6 @@ if __name__ == "__main__":
     
     binSize = 1000
     col = 50
-    k = 10
     
     for i in range(1,2):
         num = str(i)
@@ -26,7 +25,7 @@ if __name__ == "__main__":
         p_value_file = outpath + '/' + bam + ".score.txt"
         outfile = outpath + '/' + bam + ".result.txt"
         
-        params = (bam_path, bam, refpath, outpath, segpath, binSize, col, k)
+        params = (bam_path, bam, refpath, outpath, segpath, binSize, col)
         copod_preprocess.main(params)
 
 

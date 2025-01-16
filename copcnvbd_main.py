@@ -236,22 +236,16 @@ def main(bam, outpath, refpath, bam_path):
 
 if __name__ == '__main__':
     start_time = datetime.datetime.now()
+    bam_path = '../CNV_data/simu_chr21_0.2_4x/'
+    bam = 'sim1_4_4100_read.sort.bam'
+    refpath = '../CNV_data/'
+    outpath = '../CNV_data/simu_chr21_0.2_4x/result/COPOD_step2/'
+    step1_path = '../CNV_data/simu_chr21_0.2_4x/result/COPOD_step1/'
 
-    for i in range(1, 2):
-        num = str(i)
-        path = 'simu_chr21_0.2_4x'
-        bam_name = '_4_4100_'
-        bam_path = '../CNV_data/' + path + '/'
-        bam = 'sim' + num + bam_name + 'read.sort.bam'
-        refpath = '../CNV_data/'
-        outpath = '../CNV_data/' + path + '/result/COPOD_step2/'
-        step1_path = '../CNV_data/' + path + '/result/COPOD_step1/'
-
-        func1(bam_path, bam, outpath)
-        func2(outpath, bam)
-        func3(step1_path, bam, outpath)
-
-        main(bam, outpath, refpath, bam_path)
-
-        end_time = datetime.datetime.now()
-        print("running time: " + str((end_time - start_time).seconds) + " seconds")
+    func1(bam_path, bam, outpath)
+    func2(outpath, bam)
+    func3(step1_path, bam, outpath)
+    main(bam, outpath, refpath, bam_path)
+    
+    end_time = datetime.datetime.now()
+    print("running time: " + str((end_time - start_time).seconds) + " seconds")

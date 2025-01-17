@@ -5,7 +5,7 @@ Created on Mon Aug  8 16:02:38 2022
 
 @author: yyj
 """
-
+import sys
 import numpy as np
 import pysam
 import os
@@ -294,107 +294,104 @@ def combiningCNV(seg_chr, seg_start, seg_end, seg_count, scores, upper, mode):
 
     return CNV_chr, CNVstart, CNVend, CNVRD, CNVtype
 
-def main(params):  
-    starttime = datetime.datetime.now()
+starttime = datetime.datetime.now()
+# get params
+bam_path = sys.argv[1]
+bam = sys.argv[2]
+refpath = sys.argv[3]
+outpath = sys.argv[4]
+segpath = sys.argv[5]
+binSize = int(sys.argv[6])
+col = int(sys.argv[7])
     
-    # get params
-    bam_path = params[0]
-    bam = params[1]
-    refpath = params[2]
-    outpath = params[3]
-    segpath = params[4]
-    binSize = int(params[5])
-    col = int(params[6])
-    
-    p_value_file = outpath + '/' + bam + ".score.txt"
-    outfile = outpath + '/' + bam + ".result.txt"
+p_value_file = outpath + '/' + bam + ".score.txt"
+outfile = outpath + '/' + bam + ".result.txt"
 
     
-    ref = [[] for i in range(23)]
-    refList = read_bam_file(bam_path + bam)
-    for i in range(len(refList)):
-        chr = refList[i]
-        chr_num = chr.strip('chr')
-        if chr_num.isdigit():
-            chr_num = int(chr_num)
-            reference = refpath + '/chr' + str(chr_num) + '.fa'
-            ref = read_ref_file(reference, chr_num, ref)
+ref = [[] for i in range(23)]
+refList = read_bam_file(bam_path + bam)
+for i in range(len(refList)):
+    chr = refList[i]
+    chr_num = chr.strip('chr')
+    if chr_num.isdigit():
+        chr_num = int(chr_num)
+        reference = refpath + '/chr' + str(chr_num) + '.fa'
+        ref = read_ref_file(reference, chr_num, ref)
     
-    chrLen = np.full(23, 0)
-    for i in range(1, 23):
-        chrLen[i] = len(ref[i])
-    RDList, PosList, chrList = Binning(ref, binSize, chrLen, bam_path + bam)
-    all_chr = []
-    all_RD = []
-    all_start = []
-    all_end = []
-    modeList = np.full(len(chrList), 0.0)
-    for i in range(len(chrList)):
-        print("analyse " + str(chrList[i]))
-        RD = np.array(RDList[i][0])
-        pos = np.array(PosList[i][0])
-        numbin = len(RD)
-        modeList[i] = modeRD(RD)
-        scalRD = scaling_RD(RD, modeList[i])
-        #plot(pos, RD)
-        print("segment count...")
-        v = robjects.FloatVector(scalRD)
-        m = robjects.r['matrix'](v, ncol=col)
-        robjects.r.source("CBS_data.R")
-        robjects.r.CBS_data(m, segpath)
+chrLen = np.full(23, 0)
+for i in range(1, 23):
+    chrLen[i] = len(ref[i])
+RDList, PosList, chrList = Binning(ref, binSize, chrLen, bam_path + bam)
+all_chr = []
+all_RD = []
+all_start = []
+all_end = []
+modeList = np.full(len(chrList), 0.0)
+for i in range(len(chrList)):
+    print("analyse " + str(chrList[i]))
+    RD = np.array(RDList[i][0])
+    pos = np.array(PosList[i][0])
+    numbin = len(RD)
+    modeList[i] = modeRD(RD)
+    scalRD = scaling_RD(RD, modeList[i])
+    #plot(pos, RD)
+    print("segment count...")
+    v = robjects.FloatVector(scalRD)
+    m = robjects.r['matrix'](v, ncol=col)
+    robjects.r.source("CBS_data.R")
+    robjects.r.CBS_data(m, segpath)
     
-        num_col = int(numbin / col) + 1
-        seg_start, seg_end, seg_count, seg_len = Read_seg_file(num_col, numbin, segpath)
-        seg_count = np.array(seg_count)
+    num_col = int(numbin / col) + 1
+    seg_start, seg_end, seg_count, seg_len = Read_seg_file(num_col, numbin, segpath)
+    seg_count = np.array(seg_count)
     
-        seg_count = seg_count[:-1]
-        seg_start = seg_start[:-1]
-        seg_end = seg_end[:-1]
+    seg_count = seg_count[:-1]
+    seg_start = seg_start[:-1]
+    seg_end = seg_end[:-1]
     
-        seg_count, seg_start, seg_end = seg_RD(RD, pos, seg_start, seg_end, seg_count, binSize)
-        all_RD.extend(seg_count)
-        all_start.extend(seg_start)
-        all_end.extend(seg_end)
-        all_chr.extend(chrList[i] for j in range(len(seg_count)))
+    seg_count, seg_start, seg_end = seg_RD(RD, pos, seg_start, seg_end, seg_count, binSize)
+    all_RD.extend(seg_count)
+    all_start.extend(seg_start)
+    all_end.extend(seg_end)
+    all_chr.extend(chrList[i] for j in range(len(seg_count)))
     
-    all_chr = np.array(all_chr)
-    all_start = np.array(all_start)
-    all_end = np.array(all_end)
-    all_RD = np.array(all_RD)
-    for i in range(len(all_RD)):
-        if np.isnan(all_RD[i]).any():
-            all_RD[i] = (all_RD[i - 1] + all_RD[i + 1]) / 2
+all_chr = np.array(all_chr)
+all_start = np.array(all_start)
+all_end = np.array(all_end)
+all_RD = np.array(all_RD)
+for i in range(len(all_RD)):
+    if np.isnan(all_RD[i]).any():
+        all_RD[i] = (all_RD[i - 1] + all_RD[i + 1]) / 2
     
-    # COPOD_CNV
-    print("calculating scores...")
-     # train COPOD detector
-    clf_name = 'COPOD'
-    clf = COPOD()
+# COPOD_CNV
+print("calculating scores...")
+# train COPOD detector
+clf_name = 'COPOD'
+clf = COPOD()
     
-    # you could try parallel version as well.
-    all_RD = all_RD.reshape(-1,1)
-    clf.fit(all_RD)
-    #scores = clf.decision_function(all_RD)
-    pred = clf.labels_  # binary labels (0: inliers, 1: outliers)
-    scores = clf.decision_scores_  # raw outlier scores
-    print("all_RD")
-    print(all_RD)
-    print("scores:")
-    print(scores)
-    mode = np.mean(modeList)
-    print("mode:")
-    print(mode)
-    #print("pred:")
-    print(pred)
+# you could try parallel version as well.
+all_RD = all_RD.reshape(-1,1)
+clf.fit(all_RD)
+#scores = clf.decision_function(all_RD)
+pred = clf.labels_  # binary labels (0: inliers, 1: outliers)
+scores = clf.decision_scores_  # raw outlier scores
+print("all_RD")
+print(all_RD)
+print("scores:")
+print(scores)
+mode = np.mean(modeList)
+print("mode:")
+print(mode)
+#print("pred:")
+print(pred)
+    
+
+Write_data_file(all_chr, all_start, all_end, all_RD, scores, p_value_file)
+upper = boxplot(scores)
+CNV_chr, CNVstart, CNVend, CNVRD, CNVtype = combiningCNV(all_chr, all_start, all_end, all_RD, scores, upper, mode)
+CN = calculating_CN(mode, CNVRD, CNVtype)
+Write_CNV_File(CNV_chr, CNVstart, CNVend, CNVtype, CN, outfile)
     
     
-    
-    Write_data_file(all_chr, all_start, all_end, all_RD, scores, p_value_file)
-    upper = boxplot(scores)
-    CNV_chr, CNVstart, CNVend, CNVRD, CNVtype = combiningCNV(all_chr, all_start, all_end, all_RD, scores, upper, mode)
-    CN = calculating_CN(mode, CNVRD, CNVtype)
-    Write_CNV_File(CNV_chr, CNVstart, CNVend, CNVtype, CN, outfile)
-    
-    
-    endtime = datetime.datetime.now()
-    print("running time: " + str((endtime - starttime).seconds) + " seconds")
+endtime = datetime.datetime.now()
+print("running time: " + str((endtime - starttime).seconds) + " seconds")

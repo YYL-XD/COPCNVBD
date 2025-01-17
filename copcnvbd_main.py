@@ -8,6 +8,7 @@ import pysam
 import pandas as pd
 import numpy as np
 import cvxpy as cp
+import sys
 
 
 # return the ID of each read, and the start and end position of the read
@@ -234,18 +235,18 @@ def main(bam, outpath, refpath, bam_path):
     step2_result.to_csv(outputFile, sep='\t', index=False)
 
 
-if __name__ == '__main__':
-    start_time = datetime.datetime.now()
-    bam_path = '../CNV_data/simu_chr21_0.2_4x/'
-    bam = 'sim1_4_4100_read.sort.bam'
-    refpath = '../CNV_data/'
-    outpath = '../CNV_data/simu_chr21_0.2_4x/result/COPOD_step2/'
-    step1_path = '../CNV_data/simu_chr21_0.2_4x/result/COPOD_step1/'
+#get param and run
+start_time = datetime.datetime.now()
+bam_path = sys.argv[1] #'/../CNV_data/simu_chr21_0.2_4x/'
+bam = sys.argv[2]  #'sim1_4_4100_read.sort.bam'
+refpath = sys.argv[3]#'/../CNV_data/'
+outpath = sys.argv[4]#'/../CNV_data/simu_chr21_0.2_4x/result/COPOD_step2/'
+step1_path = sys.argv[5]#'/../CNV_data/simu_chr21_0.2_4x/result/COPOD_step1/'
+alpha = float(sys.argv[6])#0.25
 
-    func1(bam_path, bam, outpath)
-    func2(outpath, bam)
-    func3(step1_path, bam, outpath)
-    main(bam, outpath, refpath, bam_path)
-    
-    end_time = datetime.datetime.now()
-    print("running time: " + str((end_time - start_time).seconds) + " seconds")
+func1(bam_path, bam, outpath)
+func2(outpath, bam)
+func3(step1_path, bam, outpath)
+main(bam, outpath, refpath, bam_path, alpha)
+end_time = datetime.datetime.now()
+print("running time: " + str((end_time - start_time).seconds) + " seconds")

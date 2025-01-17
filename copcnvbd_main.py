@@ -162,7 +162,7 @@ def find_nearest_boundary(candidates, left_boundary, right_boundary):
     return cnv_left_boundary, cnv_right_boundary
 
 
-def main(bam, outpath, refpath, bam_path):
+def main(bam, outpath, refpath, bam_path, alpha):
     hx_result = outpath + bam + "_hx_result.txt"
     region_array, region_array_len, jz_region, hx_region = read_step1_result(hx_result)
 
@@ -170,11 +170,10 @@ def main(bam, outpath, refpath, bam_path):
     ref = refpath + 'chr21.fa'
     chrName = ref.split('.')[0]
     rdFile = bam_path + bam
-    outputFile = outpath + bam + '_step2_result.txt'
+    outputFile = outpath + bam + '_step2_result_' + str(alpha) +'alpha.txt'
 
     treeNum = 256
     treeSampleNum = 256
-    alpha = 0.25
 
     errorNum = 0.005
     seq = readFasta(ref)

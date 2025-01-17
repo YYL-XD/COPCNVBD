@@ -45,21 +45,21 @@ before run this algorithm, you should prepare the file of referance (*.fa), the 
  	col: the size of window when using total variation methods.
 ##
 
-"""
+##
 the columns of result file of approximate CNV region represent: 
 	chromosome name, 
 	start position of the CNV region, 
 	end position of the CNV region, 
 	the type of CNV region, 
 	the copy number
-"""
+##
 	
 run python copod_preprocess.py /../CNV_data/simu_chr21_0.2_4x/ /sim1_4_4100_read.sort.bam /../CNV_data /../CNV_data/simu_chr21_0.2_4x/result/COPOD_step1 /../CNV_data/simu_chr21_0.2_4x/result/COPOD_step1/seg_sim1 1000 50
 
 
 
 # step2: use the PEM information and image edge detection algorithm to identify CNV breakpoint
-"""
+##
 input parameters:
 	input_bam_path: the path of input bam file
  	bam_name: the name of bam
@@ -68,14 +68,14 @@ input parameters:
 	step1_path: the path of approximate CNV region profile
  	alpha: the penalty parameter in total variation method
 
-"""
-"""
+##
+##
 the columns of result file of approximate CNV region represent: 
 	chromosome name, 
 	start position of the CNV region, 
 	end position of the CNV region, 
 	the type of CNV region
-"""
+##
 
 run python copcnvbd_main.py /../CNV_data/simu_chr21_0.2_4x/ /sim1_4_4100_read.sort.bam /../CNV_data/ /../CNV_data/simu_chr21_0.2_4x/result/COPOD_step2 /../CNV_data/simu_chr21_0.2_4x/result/COPOD_step1 0.3
 
